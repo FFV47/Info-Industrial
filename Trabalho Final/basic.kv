@@ -1,0 +1,667 @@
+#:kivy 2.0.0
+
+<MainWidget>:
+    BoxLayout:
+        orientation: 'vertical'
+        MDToolbar:
+            title: 'Informática Industrial'
+        MDBottomNavigation:
+            panel_color: app.theme_cls.accent_color
+            # text_color_normal: "Blue"
+            # text_color_active: 0.8, 0.8, 0.8, 1
+            MDBottomNavigationItem:
+                name: 'config'
+                text: 'Configurações'
+                icon: 'cogs'
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    font_size: '30sp'
+                    padding: '10dp'
+                    spacing: '5dp'
+                FloatLayout:
+                    id: capa
+                    canvas.before:
+                        Color:
+                            rgba: 0.80, 0.80, 0.80, 1
+                        Rectangle:
+
+                            size: self.size
+                    Image:
+                        id: esteira_img
+                        source: 'imgs/A.M Turing.png'
+
+
+                    MDTextField:
+                        id: hostname
+                        text: '127.0.0.1'
+                        hint_text: 'Endereço IP'
+                        size_hint: (0.2, None)
+                        height: '50dp'
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.2}
+                    MDTextField:
+                        id: port
+                        text: '4000'
+                        hint_text: 'Porta'
+                        size_hint: (0.2, None)
+                        height: '50dp'
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.1}
+                    MDRoundFlatIconButton:
+                        id: bt_con
+                        text: 'CONECTAR'
+                        icon: 'lan-connect'
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.04}
+                        on_press: root.connect()
+            MDBottomNavigationItem:
+                name: 'data'
+                text: 'Dados'
+                icon: 'chart-donut'
+                ScrollView:
+                    size_hint: (1, None)
+                    size: Window.width, Window.height
+                    bar_pos_y: 'left'
+                    bar_width: 20
+                    effect_cls: 'ScrollEffect'
+                    MDStackLayout:
+                        id: modbus_data
+                        size_hint: (1, None)
+                        padding: 0.05 * (Window.width), '150dp'
+                        spacing: (Window.width / 5 - 2 * (0.05 * Window.width)) / 3
+                        adaptive_height: True
+                MDFloatingActionButtonSpeedDial:
+                    data: root.tag_types
+                    root_button_anim: True
+                    label_text_color: [1,1,1,1]
+                    # callback: root.new_tag_dialog
+            MDBottomNavigationItem:
+                name: 'anim'
+                text: 'Planta'
+                icon: 'factory'
+                FloatLayout:
+                    id: desenho
+                    canvas.before:
+                        Color:
+                            rgba: 0.5, 0.5, 0.5, 1
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                    MDFloatingActionButton:
+                        icon: "cogs"
+                        on_release: root.config_planta()
+                        pos_hint: {'center_x': 0.96, 'center_y': 0.07}
+                        # data: {}
+                        # root_button_anim: True
+                        #hint_animation: True
+                        # label_text_color: [1,1,1,1]
+                        # callback: root.config_planta
+                    Image:
+                        id: esteira_img
+                        source: 'imgs/esteira.jpeg'
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        size: self.size
+                        allow_stretch: True
+            MDBottomNavigationItem:
+                name: 'plot'
+                text: 'Gráficos'
+                icon: 'chart-line'
+                id: graph_nav
+                FloatLayout:
+                    id:graph_nav
+                    canvas.before:
+                        # Color:
+                        # rgba: 0.75, 0.75, 0.75, 1
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                MDFloatingActionButton:
+                    icon: "graph"
+                    on_release: root.show_dialog_hist()
+                    pos_hint: {'center_x': 0.95, 'center_y': 0.03}
+
+
+<DataGraphWidget>:
+    orientation: 'vertical'
+    size_hint:(1,1)
+    TimeSeriesGraph:
+        id: graph_peso
+        xlabel: 'Peso'
+        ylabel: 'Kg'
+        background_color: 0.5,0.5,0.5,0.5
+        x_ticks_minor: 1
+        x_ticks_major: 5
+        y_ticks_major: 150
+        y_grid_label: True
+        x_grid_label: True
+        padding: 5
+        x_grid: True
+        y_grid: True
+        xmin: 0
+        ymin: 0
+        ymax: 1100
+
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint:(0.01,0.01)
+    TimeSeriesGraph:
+        id: graph_R
+        xlabel:'Red'
+        ylabel:'Nvl'
+        background_color:0.5,0.5,0.5,0.5
+        x_ticks_minor: 1
+        x_ticks_major: 5
+        y_ticks_major: 55
+        y_grid_label:True
+        x_grid_label:True
+        padding: 5
+        x_grid:True
+        y_grid:True
+        xmin: 0
+        xmax:20
+        ymin: 0
+        ymax: 310
+
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint:(0.01,0.01)
+    TimeSeriesGraph:
+        id: graph_G
+        xlabel:'Green'
+        ylabel:'Nvl'
+        background_color:0.5,0.5,0.5,0.5
+        x_ticks_minor: 1
+        x_ticks_major: 5
+        y_ticks_major: 55
+        y_grid_label:True
+        x_grid_label:True
+        padding: 5
+        x_grid:True
+        y_grid:True
+        xmin: 0
+        xmax: 20
+        ymin: 0
+        ymax: 310
+
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint:(0.01,0.01)
+    TimeSeriesGraph:
+        id: graph_B
+        xlabel:'Blue'
+        ylabel:'Nvl'
+        background_color:0.5,0.5,0.5,0.5
+        x_ticks_minor: 1
+        x_ticks_major: 5
+        y_ticks_major: 55
+        y_grid_label:True
+        x_grid_label:True
+        padding: 5
+        x_grid:True
+        y_grid:True
+        xmin: 0
+        xmax: 20
+        ymin: 0
+        ymax: 310
+
+<DataCard>:
+    orientation: 'vertical'
+    padding: '8dp'
+    size_hint: (None, None)
+    size: Window.width / 5, '80dp'
+    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+    MDLabel:
+        text: root.title
+        size_hint_y: None
+        height: self.texture_size[1]
+        pos_hint: {'top': 1}
+    MDSeparator:
+        height: '1dp'
+
+
+<CardHoldingRegister>:
+    MDTextField:
+        id: textfield
+        helper_text: 'Pressione Enter para enviar o dado'
+        helper_text_mode: 'persistent'
+        multiline: False
+        on_text_validate: root.write_data()
+
+<CardInputRegister>:
+    MDLabel:
+        id: label
+
+
+<CardCoil>:
+    MDSwitch:
+        id: switch
+        on_active: root.write_data(*args)
+
+<NewTagContent>
+    orientation: "horizontal"
+    spacing: "12dp"
+    adaptive_height: True
+    size_hint_y: None
+    height: "400dp"
+    BoxLayout:
+        orientation: "vertical"
+        BoxLayout:
+            orientation: "vertical"
+            MDSeparator:
+                height: '1dp'
+            MDLabel:
+                # size_hint: 0.4,1
+                text: "Esteira 1"
+                halign: "center"
+                valign: "bottom"
+            BoxLayout:
+                orientation: "horizontal"
+                MDCheckbox:
+                    group: 'est1'
+                    id: filtro_est_1
+                    size: dp(48), dp(48)
+                    size_hint: None,None
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    on_active: root.update_filter(filt_key="filtro_est_1", filt_type="Cor", *args)
+                MDLabel:
+                    size_hint: 0.4,1
+                    text: "Cor"
+                    # halign: "left"
+                    valign: "bottom"
+                MDCheckbox:
+                    group: 'est1'
+                    id: filtro_est_1_massa
+                    size: dp(48), dp(48)
+                    size_hint: None,None
+                    on_active: root.update_filter(filt_key="filtro_est_1", filt_type="Massa", *args)
+                MDLabel:
+                    size_hint: 0.4,1
+                    text: "Massa"
+                    valign: "bottom"
+            BoxLayout:
+                orientation: "horizontal"
+                MDCheckbox:
+                    group: None
+                    id: filtro_cor_r_1
+                    size: dp(48), dp(48)
+                    size_hint: None,None
+                    selected_color: 1,0,0,1
+                    unselected_color: 1,0,0,1
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    on_active: root.update_filter(filt_key="filtro_cor_r_1", *args)
+                MDLabel:
+                    size_hint: 1/2/6,1
+                    text: "R"
+                    valign: "bottom"
+                MDCheckbox:
+                    id: filtro_cor_g_1
+                    size: dp(48), dp(48)
+                    size_hint: None,None
+                    selected_color: 0,1,0,1
+                    unselected_color: 0,1,0,1
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    on_active: root.update_filter(filt_key="filtro_cor_g_1", *args)
+                MDLabel:
+                    size_hint: 1/2/6,1
+                    text: "G"
+                    valign: "bottom"
+                MDCheckbox:
+                    id: filtro_cor_b_1
+                    size: dp(48), dp(48)
+                    size_hint: None,None
+                    selected_color: 0,0,1,1
+                    unselected_color: 0,0,1,1
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    on_active: root.update_filter(filt_key="filtro_cor_b_1", *args)
+                MDLabel:
+                    size_hint: 1/2/6,1
+                    text: "B"
+                    valign: "bottom"
+                MDLabel:
+                    size_hint: 1/2/2, 1
+                    text: "Massa >= "
+                    valign: "center"
+                    halign: "right"
+                MDTextField:
+                    size_hint: 1/2/2, None
+                    helper_text: str(app.root._modbusdata["filtro_massa_1"])
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    multiline: False
+                    # on_text_validate: root.update_filter
+
+            MDSeparator:
+                height: '1dp'
+        BoxLayout:
+            orientation: "vertical"
+            MDLabel:
+                # size_hint: 0.4,1
+                text: "Esteira 2"
+                halign: "center"
+                valign: "bottom"
+            BoxLayout:
+                orientation: "horizontal"
+                MDCheckbox:
+                    group: 'est2'
+                    id: filtro_est_2
+                    size: dp(48), dp(48)
+                    size_hint: None,None
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    on_active: root.update_filter(filt_key="filtro_est_2", filt_type="Cor", *args)
+                MDLabel:
+                    size_hint: 0.4,1
+                    text: "Cor"
+                    valign: "bottom"
+                MDCheckbox:
+                    group: 'est2'
+                    id: filtro_est_2_massa
+                    size: dp(48), dp(48)
+                    size_hint: None,None
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    on_active: root.update_filter(filt_key="filtro_est_2", filt_type="Massa", *args)
+                MDLabel:
+                    size_hint: 0.4,1
+                    text: "Massa"
+                    valign: "bottom"
+            BoxLayout:
+                orientation: "horizontal"
+                MDCheckbox:
+                    id: filtro_cor_r_2
+                    size: dp(48), dp(48)
+                    size_hint: None,None
+                    selected_color: 1,0,0,1
+                    unselected_color: 1,0,0,1
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    on_active: root.update_filter(filt_key="filtro_cor_r_2", *args)
+                MDLabel:
+                    size_hint: 1/2/6,1
+                    valign: "bottom"
+                    text: "R"
+                MDCheckbox:
+                    id: filtro_cor_g_2
+                    size: dp(48), dp(48)
+                    size_hint: None,None
+                    selected_color: 0,1,0,1
+                    unselected_color: 0,1,0,1
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    on_active: root.update_filter(filt_key="filtro_cor_g_2", *args)
+                MDLabel:
+                    size_hint: 1/2/6,1
+                    valign: "bottom"
+                    text: "G"
+                MDCheckbox:
+                    id: filtro_cor_b_2
+                    size: dp(48), dp(48)
+                    size_hint: None,None
+                    selected_color: 0,0,1,1
+                    unselected_color: 0,0,1,1
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    on_active: root.update_filter(filt_key="filtro_cor_b_2", *args)
+                MDLabel:
+                    size_hint: 1/2/6,1
+                    valign: "bottom"
+                    text: "B"
+                MDLabel:
+                    size_hint: 1/2/2, 1
+                    text: "Massa >= "
+                    valign: "center"
+                    halign: "right"
+                MDTextField:
+                    size_hint: 1/2/2, None
+                    helper_text: str(app.root._modbusdata["filtro_massa_1"])
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    multiline: False
+            MDSeparator:
+                height: '1dp'
+        BoxLayout:
+            orientation: "vertical"
+            MDLabel:
+                # size_hint: 0.4,1
+                text: "Esteira 3"
+                halign: "center"
+                valign: "bottom"
+            BoxLayout:
+                orientation: "horizontal"
+                MDCheckbox:
+                    group: 'est3'
+                    id: filtro_est_3
+                    size: dp(48), dp(48)
+                    size_hint: None,None
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    on_active: root.update_filter(filt_key="filtro_est_3", filt_type="Cor", *args)
+                MDLabel:
+                    size_hint: 0.4,1
+                    valign: "bottom"
+                    text: "Cor"
+                MDCheckbox:
+                    group: 'est3'
+                    id: filtro_est_3_massa
+                    size: dp(48), dp(48)
+                    size_hint: None,None
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    on_active: root.update_filter(filt_key="filtro_est_3", filt_type="Massa", *args)
+                MDLabel:
+                    size_hint: 0.4,1
+                    valign: "bottom"
+                    text: "Massa"
+            BoxLayout:
+                orientation: "horizontal"
+                MDCheckbox:
+                    id: filtro_cor_r_3
+                    size: dp(48), dp(48)
+                    size_hint: None,None
+                    selected_color: 1,0,0,1
+                    unselected_color: 1,0,0,1
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    on_active: root.update_filter(filt_key="filtro_cor_r_3", *args)
+                MDLabel:
+                    size_hint: 1/2/6,1
+                    valign: "bottom"
+                    text: "R"
+                MDCheckbox:
+                    id: filtro_cor_g_3
+                    size: dp(48), dp(48)
+                    size_hint: None,None
+                    selected_color: 0,1,0,1
+                    unselected_color: 0,1,0,1
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    on_active: root.update_filter(filt_key="filtro_cor_g_3", *args)
+                MDLabel:
+                    size_hint: 1/2/6,1
+                    valign: "bottom"
+                    text: "G"
+                MDCheckbox:
+                    id: filtro_cor_b_3
+                    size: dp(48), dp(48)
+                    size_hint: None,None
+                    selected_color: 0,0,1,1
+                    unselected_color: 0,0,1,1
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    on_active: root.update_filter(filt_key="filtro_cor_b_3", *args)
+                MDLabel:
+                    size_hint: 1/2/6,1
+                    valign: "bottom"
+                    text: "B"
+                MDLabel:
+                    size_hint: 1/2/2, 1
+                    text: "Massa >= "
+                    valign: "center"
+                    halign: "right"
+                MDTextField:
+                    size_hint: 1/2/2, None
+                    helper_text: str(app.root._modbusdata["filtro_massa_1"])
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    multiline: False
+            MDSeparator:
+                height: '1dp'
+
+<GraphConfigContent>
+    orientation: "horizontal"
+    spacing: "12dp"
+    adaptive_height: True
+    size_hint_y: None
+    height: "500dp"
+    BoxLayout:
+        orientation: "vertical"
+        BoxLayout:
+            orientation: "vertical"
+            MDSeparator:
+                height: '1dp'
+            MDLabel:
+                # size_hint: 0.4,1
+                text: "Gráficos Históricos"
+                halign: "center"
+                valign: "bottom"
+            BoxLayout:
+                orientation: "horizontal"
+                MDCheckbox:
+                    group: 'graph_type'
+                    id: realtime
+                    size: dp(48), dp(48)
+                    size_hint: None,None
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    #on_active: root.update_config(filt_key="filtro_est_1", graph_type="hist", *args)
+                MDLabel:
+                    size_hint: 0.4,1
+                    text: "Tempo Real"
+                    # halign: "left"
+                    valign: "bottom"
+                MDCheckbox:
+                    group: 'graph_type'
+                    id: hist
+                    size: dp(48), dp(48)
+                    size_hint: None,None
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    #on_active: root.update_config(filt_key="filtro_est_1", graph_type="realtime", *args)
+                MDLabel:
+                    size_hint: 0.4,1
+                    text: "Dados Históricos"
+                    # halign: "left"
+                    valign: "bottom"
+            BoxLayout:
+                orientation: "horizontal"
+                MDCheckbox:
+                    id: graph_peso
+                    size: dp(48), dp(48)
+                    size_hint: None,None
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    # on_active: root.update_config(filt_key="filtro_est_1", graph_type="realtime", *args)
+                MDLabel:
+                    size_hint: 0.4,1
+                    text: "Peso"
+                    # halign: "left"
+                    valign: "bottom"
+                MDCheckbox:
+                    id: graph_R
+                    size: dp(48), dp(48)
+                    size_hint: None,None
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    # on_active: root.update_config(filt_key="filtro_est_1", graph_type="realtime", *args)
+                MDLabel:
+                    size_hint: 0.4,1
+                    text: "Cor_R"
+                    # halign: "left"
+                    valign: "bottom"
+
+                MDCheckbox:
+                    id: graph_G
+                    size: dp(48), dp(48)
+                    size_hint: None,None
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    # on_active: root.update_config(filt_key="filtro_est_1", graph_type="realtime", *args)
+                MDLabel:
+                    size_hint: 0.4,1
+                    text: "Cor_G"
+                    # halign: "left"
+                    valign: "bottom"
+                MDCheckbox:
+                    id: graph_B
+                    size: dp(48), dp(48)
+                    size_hint: None,None
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    # on_active: root.update_config(filt_key="filtro_est_1", graph_type="realtime", *args)
+                MDLabel:
+                    size_hint: 0.4,1
+                    text: "Cor_B"
+                    # halign: "left"
+                    valign: "bottom"
+            # BoxLayout:
+            #     orientation: "horizontal"
+            #     MDCheckbox:
+            #         id: graph_freqdes
+            #         size: dp(48), dp(48)
+            #         size_hint: None,None
+            #         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            #         # on_active: root.update_config(filt_key="filtro_est_1", graph_type="realtime", *args)
+            #     MDLabel:
+            #         size_hint: 0.4,1
+            #         text: "freq_des"
+            #         # halign: "left"
+            #         valign: "bottom"
+            #     MDCheckbox:
+            #         id: graph_freqmot
+            #         size: dp(48), dp(48)
+            #         size_hint: None,None
+            #         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            #         # on_active: root.update_config(filt_key="filtro_est_1", graph_type="realtime", *args)
+            #     MDLabel:
+            #         size_hint: 0.4,1
+            #         text: "freq_mot"
+            #         # halign: "left"
+            #         valign: "bottom"
+            #     MDCheckbox:
+            #         id: graph_tensao
+            #         size: dp(48), dp(48)
+            #         size_hint: None,None
+            #         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            #         # on_active: root.update_config(filt_key="filtro_est_1", graph_type="realtime", *args)
+            #     MDLabel:
+            #         size_hint: 0.4,1
+            #         text: "tesão"
+            #         # halign: "left"
+            #         valign: "bottom"
+            #     MDCheckbox:
+            #         id: graph_rot
+            #         size: dp(48), dp(48)
+            #         size_hint: None,None
+            #         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            #         # on_active: root.update_config(filt_key="filtro_est_1", graph_type="realtime", *args)
+            #     MDLabel:
+            #         size_hint: 0.4,1
+            #         text: "rotação"
+            #         # halign: "left"
+            #         valign: "bottom"
+            #     MDCheckbox:
+            #         id: graph_corrente
+            #         size: dp(48), dp(48)
+            #         size_hint: None,None
+            #         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            #         # on_active: root.update_config(filt_key="filtro_est_1", graph_type="realtime", *args)
+            #     MDLabel:
+            #         size_hint: 0.4,1
+            #         text: "Corrente"
+            #         # halign: "left"
+            #         valign: "bottom"
+
+            BoxLayout:
+                orientation: "horizontal"
+                MDLabel:
+                    size_hint: (1,0.1)
+                    text:'Dados iniciais\r\n [size=10] (DD\MM\AAAA HH:MM:SS)[/size]'
+                    halign:'center'
+                    markup:True
+                MDTextField:
+                    id: init_date_txt
+                    hint_text:'Digite os dados para consulta'
+                    size_hint:(1,0.8)
+                    halign:'center'
+                    valign:'middle'
+            BoxLayout:
+                orientation: "horizontal"
+                MDLabel:
+                    size_hint: (1,0.1)
+                    text:'Dados Finais\r\n [size=10] (DD\MM\AAAA HH:MM:SS)[/size]'
+                    halign:'center'
+                    markup:True
+                MDTextField:
+                    id: final_date_txt
+                    hint_text:'Digite os dados para consulta'
+                    size_hint:(1,0.8)
+                    halign:'center'
+                    valign:'middle'

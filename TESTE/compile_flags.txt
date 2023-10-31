@@ -1,0 +1,6 @@
+-xc++
+--driver-mode=g++
+-std=c++17
+-Wextra
+-Wall
+-Iinclude

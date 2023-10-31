@@ -1,0 +1,13 @@
+#:kivy 1.11.1
+
+<MyWidget>:
+    Button:
+        id: btn
+        text: 'Increment'
+        size_hint: (0.1,0.1)
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        on_press: root.incrementar()
+    Label:
+        id: lb
+        size_hint: (0.1,0.1)
+        text: '0'
